@@ -1,3 +1,11 @@
+/* algorytm 2-aproksymacyjny rozwiązujący problem komiwojażera
+    w grafie pełnym z wagami >=0
+    dodatkowo wagi spełniają nierówność trójkąta
+
+    wejście - graf G podany za pomocą (symetrycznej) macierzy sąsiedztwa
+    wyjście - lista z kolejnymi wierzchołkami G, tworzącymi szukany cykl Hamiltona
+
+*/
 import java.util.*
 
 class ComparePairs{
@@ -55,17 +63,11 @@ fun createNeighbourListAfterPrim(parents : IntArray) : List<MutableList<Int>> {
     for(i in 1..parents.size){
         val parentNodeNum = parents[i-1]
         if(parentNodeNum !in neighborsLists[i-1])
-            neighborsLists[i-1].add(parentNodeNum) //parent is neighbour of its child
+            neighborsLists[i-1].add(parentNodeNum) //rodzic jest sasiadem swojego dziecka
         if((i-1) !in neighborsLists[parentNodeNum])
-            neighborsLists[parentNodeNum].add(i-1) //parent's neighbour is its child
+            neighborsLists[parentNodeNum].add(i-1) //dziecko rodzica jest jego sasiadem
     }
     return neighborsLists
-}
-
-fun printListOfLists(listOfLists: List<MutableList<Int>>) {
-    for(i in 1..listOfLists.size){
-        println(listOfLists[i-1])
-    }
 }
 
 fun findEulerCycle(neighborLists : List<MutableList<Int>>) : List<Int>{
@@ -96,15 +98,21 @@ fun findHamilton(cycle : List<Int>) : List<Int> {
     return hamilton
 }
 
+fun printTSPCycle(G : Array<IntArray>){
+    println(findHamilton(findEulerCycle(createNeighbourListAfterPrim(prim(G)))).toString())
+}
+
 fun main(args: Array<String>) {
-/*    val G : Array<IntArray> = arrayOf(//tablica G musi być symetryczna
+    val G1 : Array<IntArray> = arrayOf(
         intArrayOf(0,1,8,3),
         intArrayOf(1,0,2,5),
         intArrayOf(8,2,0,4),
         intArrayOf(3,5,4,0)
-    )*/
+    )
 
-    val G : Array<IntArray> = arrayOf(//tablica G musi być symetryczna
+    printTSPCycle(G1)
+
+    val G2 : Array<IntArray> = arrayOf(
         intArrayOf(0,3,2,10,15),
         intArrayOf(3,0,1,7,9),
         intArrayOf(2,1,0,5,6),
@@ -112,7 +120,7 @@ fun main(args: Array<String>) {
         intArrayOf(15,9,6,4,0)
     )
 
-    println(findHamilton(findEulerCycle(createNeighbourListAfterPrim(prim(G)))).toString())
+    printTSPCycle(G2)
 }
 
 
