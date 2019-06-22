@@ -22,19 +22,19 @@ fun prim(G : Array<IntArray>) : IntArray {
         parents[i-1] = -1
     }
 
-    val pq = PriorityQueue<Pair<Int,Int>>(ComparePairs)
+    val pq = PriorityQueue<Pair<Int,Int>>(ComparePairs)//kolejka priorytetowa przechowujaca pary postaci <numerWezla, odlegloscOdDrzewa>
     pq.add(Pair(0, 0))
 
     while(pq.isNotEmpty()){
-        val currentNode = pq.poll() //delete min from queue
+        val currentNode = pq.poll() //usun minimum z kolejki
 
         val currentNodeNum = currentNode.first
         distances[currentNodeNum] = 0
 
         val currentNodeNeighbors = G[currentNodeNum]
         for(neighborNodeNum in 1..currentNodeNeighbors.size){
-            if(neighborNodeNum-1 == currentNodeNum) continue //this is not a neighbour, but currentNode
-            if(distances[neighborNodeNum-1] == 0) continue //we have already used this node
+            if(neighborNodeNum-1 == currentNodeNum) continue //nie interesuje nas biezacy wezel
+            if(distances[neighborNodeNum-1] == 0) continue //nie interesuja nas juz odwiedzone wezly
 
             val oldNeighborPair = Pair(neighborNodeNum-1, distances[neighborNodeNum-1])
             pq.remove(oldNeighborPair) //removes pair if it exists
@@ -54,7 +54,9 @@ fun prim(G : Array<IntArray>) : IntArray {
 }
 
 fun createNeighbourListAfterPrim(parents : IntArray) : List<MutableList<Int>> {
-    //parent of node i is parents[i]
+    //pomocnicza funkcja tworzaca liste sasiedztwa dla drzewa stworzonego przez algorytm prima
+
+    //rodzicem wezla o numerze i jest wezel o numerze parents[i]
     val neighborsLists = mutableListOf<MutableList<Int>>()
     for(i in 1..parents.size){
         neighborsLists.add(mutableListOf())
